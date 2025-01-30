@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account</title>
+</head>
+<body>
+
+    <h2>Delete Account</h2>
+    <form id="deleteAccountForm">
+        <label for="uid">Enter UID to delete account:</label>
+        <input type="text" id="uid" name="uid" required>
+        <button type="submit">Delete Account</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('deleteAccountForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const uid = document.getElementById('uid').value;
+            const messageDiv = document.getElementById('message');
+
+            if (!uid) {
+                messageDiv.textContent = 'Please enter a UID.';
+                return;
+            }
+
+            fetch('/api/delete_account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid: uid })
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.textContent = data.message;
+            })
+            .catch(err => {
+                messageDiv.textContent = 'Error: ' + err;
+            });
+        });
+    </script>
+
+</body>
+</html>
